@@ -1,0 +1,18 @@
+{
+  "name": "free-ai-gateway-sdk",
+  "version": "1.0.0",
+  "description": "Zero-dependency lightweight TypeScript & Node.js Client SDK for Free AI Gateway",
+  "main": "index.ts",
+  "module": "index.ts",
+  "types": "index.ts",
+  "keywords": [
+    "free-ai-gateway",
+    "openai",
+    "anthropic",
+    "llm",
+    "sdk",
+    "ai-gateway"
+  ],
+  "author": "Free AI Gateway Team",
+  "license": "MIT"
+}

@@ -1,0 +1,54 @@
+# dependencies
+node_modules/
+/.pnp
+.pnp.js
+
+# testing
+coverage/
+
+# next.js
+.next/
+out/
+build/
+dist/
+
+# turborepo
+.turbo/
+
+# vercel
+.vercel/
+
+# misc
+.DS_Store
+*.pem
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+bun.log*
+test_output.txt
+
+# local env files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+*.env
+
+# IDE / Editor
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Cloudflare Wrangler (apps/worker)
+.wrangler/
+apps/worker/dist/
+
+# SQLite / Local DBs
+*.sqlite
+*.sqlite3
+*.db
+*.db-journal

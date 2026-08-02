@@ -1,0 +1,8 @@
+name = "free-ai-gateway-worker"
+main = "src/index.ts"
+compatibility_date = "2024-09-23"
+compatibility_flags = ["nodejs_compat"]
+
+[vars]
+# Variabel environment diatur di Cloudflare Dashboard atau via secret
+# KV_URL, KV_TOKEN, DATABASE_URL, dll.

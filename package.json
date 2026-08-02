@@ -1,0 +1,23 @@
+{
+  "name": "free-ai-gateway-monorepo",
+  "private": true,
+  "packageManager": "bun@1.1.20",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "test": "turbo run test",
+    "typecheck": "turbo run typecheck",
+    "db:setup": "bun run scripts/db-setup.ts"
+  },
+  "devDependencies": {
+    "turbo": "^2.0.0"
+  },
+  "dependencies": {
+    "eslint-config-next": "^16.3.0-canary.106",
+    "next": "^16.3.0-canary.106"
+  }
+}

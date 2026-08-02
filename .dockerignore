@@ -1,0 +1,11 @@
+node_modules
+.next
+.turbo
+.git
+.vscode
+**/node_modules
+**/.next
+**/.turbo
+**/*.log
+dist
+coverage
