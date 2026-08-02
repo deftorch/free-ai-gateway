@@ -36,9 +36,9 @@ async function main() {
   await db
     .insert(models)
     .values([
-      { id: "openai/gpt-oss-120b", providerId: "groq", status: "active", contextWindow: 128000 },
-      { id: "gemini-2.5-flash-lite", providerId: "google-ai-studio", status: "active", contextWindow: 2000000 },
-      { id: "mistral-small-latest", providerId: "mistral", status: "active", contextWindow: 32000 },
+      { id: "openai/gpt-oss-120b", providerId: "groq", displayName: "Llama 3.3 70B Versatile", status: "active", contextWindow: 128000 },
+      { id: "openai/gpt-4o-mini", providerId: "google-ai-studio", displayName: "Gemini 3.6 Flash", status: "active", contextWindow: 1048576 },
+      { id: "mistral-small-latest", providerId: "mistral", displayName: "Mistral Small", status: "active", contextWindow: 32000 },
     ])
     .onConflictDoNothing();
 

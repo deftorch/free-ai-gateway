@@ -16,7 +16,7 @@ export const googleAdapter: ProviderAdapter = {
   manifest: { name: "Google AI Studio", capabilities: { streaming: true, vision: true, toolCalling: true }, pricing: "freemium" },
 
   buildRequest(apiKey: string, req: ChatCompletionRequest): Request {
-    const modelId = req.model || "gemini-2.5-flash-lite";
+    const modelId = req.model || "gemini-3.6-flash";
 
     return new Request(`${this.baseUrl}/chat/completions`, {
       method: "POST",

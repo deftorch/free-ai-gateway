@@ -8,7 +8,8 @@ async function main() {
   }
   const sql = neon(process.env.DATABASE_URL);
   const db = drizzle(sql);
-  await migrate(db, { migrationsFolder: "./drizzle" });
+  const path = require("path");
+  await migrate(db, { migrationsFolder: path.join(__dirname, "../drizzle") });
   console.log("Migrasi selesai.");
 }
 

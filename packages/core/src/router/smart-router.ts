@@ -49,16 +49,16 @@ export function classifyTask(messages?: Array<{ role: string; content: unknown }
  */
 const BUILTIN_MODEL_GROUPS: Record<string, string[]> = {
   "kode-terbaik": ["groq/openai/gpt-oss-120b", "groq/qwen/qwen3.6-27b"],
-  "fastest-first": ["groq/openai/gpt-oss-120b", "google-ai-studio/gemini-2.5-flash-lite"],
-  fast: ["groq/openai/gpt-oss-120b", "google-ai-studio/gemini-2.5-flash-lite"],
+  "fastest-first": ["groq/openai/gpt-oss-120b", "google-ai-studio/gemini-3.6-flash"],
+  fast: ["groq/openai/gpt-oss-120b", "google-ai-studio/gemini-3.6-flash"],
   "best-coding": ["groq/openai/gpt-oss-120b", "groq/qwen/qwen3.6-27b"],
 };
 
 /** Builtin fallback untuk rute 'auto' berbasis tugas */
 const BUILTIN_TASK_TARGETS: Record<TaskType, string[]> = {
-  vision: ["google-ai-studio/gemini-2.5-flash-lite", "google-ai-studio/gemini-2.5-flash"],
+  vision: ["google-ai-studio/gemini-3.6-flash", "google-ai-studio/gemini-3.5-flash"],
   coding: ["groq/openai/gpt-oss-120b", "groq/qwen/qwen3.6-27b"],
-  general: ["groq/openai/gpt-oss-120b", "google-ai-studio/gemini-2.5-flash-lite"],
+  general: ["groq/openai/gpt-oss-120b", "google-ai-studio/gemini-3.6-flash"],
 };
 
 import { kv, kvKeys } from "../kv/client";

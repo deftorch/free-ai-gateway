@@ -3,14 +3,14 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev --webpack",
     "build": "next build --webpack",
     "start": "next start",
     "lint": "next lint",
     "typecheck": "tsc --noEmit",
     "db:generate": "drizzle-kit generate --config=../../packages/database/drizzle.config.ts",
-    "db:migrate": "tsx ../../packages/database/drizzle/migrate.ts",
-    "db:seed": "tsx ../../packages/database/drizzle/seed.ts",
+    "db:migrate": "bun ../../packages/database/drizzle/migrate.ts",
+    "db:seed": "bun ../../packages/database/drizzle/seed.ts",
     "db:studio": "drizzle-kit studio --config=../../packages/database/drizzle.config.ts",
     "test": "bun test ./lib ./app ./bin ./tests",
     "cli": "bun bin/cli.ts"
