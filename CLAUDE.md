@@ -57,6 +57,7 @@ di README." Contoh yang salah: "adapter Gemini sudah dibuat."
 Sebelum melaporkan task selesai, jalankan dan tunjukkan output nyata dari:
 
 ```bash
+bun run db:push:test
 bun run lint
 bun run typecheck
 bun run test
@@ -112,6 +113,8 @@ deploy/                 Dockerfile, docker-compose, wrangler.toml
 | Perintah | Fungsi |
 |---|---|
 | `bun run dev` | Jalankan semua package dalam mode dev |
+| `bun run db:push` | Migrasi/push skema DB lokal (`local.sqlite`) |
+| `bun run db:push:test` | Migrasi/push skema DB test (`test.sqlite`) wajib sebelum test lokal |
 | `bun run test` | Jalankan semua test (unit + contract) |
 | `bun run test:contract` | Jalankan contract test adapter saja |
 | `bun run lint` / `bun run typecheck` | Gate wajib sebelum PR |

@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "bun --watch --env-file=../../.env src/serve.ts",
     "build": "tsc -p tsconfig.json",
-    "test": "vitest run",
+    "test": "vitest run --fileParallelism false",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit"
   },
@@ -16,7 +16,7 @@
     "@free-ai-gateway/core": "workspace:*",
     "drizzle-orm": "^0.45.2",
     "hono": "^4.6.0",
-    "zod": "^3.23.0"
+    "zod": "^4.4.3"
   },
   "devDependencies": {
     "vitest": "^2.1.0",

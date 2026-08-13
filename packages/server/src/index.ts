@@ -90,7 +90,7 @@ app.post("/v1/chat/completions", async (c) => {
   const scopes = c.get("scopes") as string[];
   if (!scopes.includes(body.provider)) {
     return c.json(
-      { error: { message: `Akses ditolak: Virtual key tidak memiliki izin (scope) untuk provider '${body.provider}'.`, type: "auth_failed" } },
+      { error: { message: `Akses ditolak: Virtual key tidak memiliki izin (scope) untuk provider '${body.provider}'.`, type: "insufficient_scope" } },
       403,
     );
   }
