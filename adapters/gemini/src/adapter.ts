@@ -122,14 +122,24 @@ function mapFinishReason(
 }
 
 /** Klasifikasi error Gemini -> kategori generik ProviderError (dipakai key pool manager). */
-function toProviderError(status: number, body: GeminiErrorBody | null): ProviderError {
+function toProviderError(response: Response, body: GeminiErrorBody | null): ProviderError {
+  const status = response.status;
   const message = body?.error?.message ?? `Gemini API error, HTTP ${status}`;
   const googleStatus = body?.error?.status;
 
   if (status === 429 || googleStatus === "RESOURCE_EXHAUSTED") {
-    return new ProviderError(message, "rate_limited");
+    let retryAfterMs: number | undefined;
+    const retryAfter = response.headers.get("Retry-After");
+    if (retryAfter) {
+      const parsed = parseInt(retryAfter, 10);
+      if (!isNaN(parsed)) {
+        retryAfterMs = parsed * 1000;
+      }
+    }
+    return new ProviderError(message, "rate_limited", retryAfterMs);
   }
   if (status === 401 || status === 403 || googleStatus === "PERMISSION_DENIED") {
+    // SENGAJA belum ada: Penanganan kind: "auth_failed" (nonaktif permanen) (Step TBD)
     return new ProviderError(message, "auth_failed");
   }
   if (status === 404 || googleStatus === "NOT_FOUND") {
@@ -166,7 +176,7 @@ export const geminiAdapter: ProviderAdapter = {
     }
 
     if (!response.ok) {
-      throw toProviderError(response.status, await parseErrorResponse(response));
+      throw toProviderError(response, await parseErrorResponse(response));
     }
 
     const data = (await response.json()) as GeminiListModelsResponse;
@@ -209,7 +219,7 @@ export const geminiAdapter: ProviderAdapter = {
     }
 
     if (!response.ok) {
-      throw toProviderError(response.status, await parseErrorResponse(response));
+      throw toProviderError(response, await parseErrorResponse(response));
     }
 
     const data = (await response.json()) as GeminiGenerateContentResponse;
@@ -258,7 +268,7 @@ export const geminiAdapter: ProviderAdapter = {
     }
 
     if (!response.ok) {
-      throw toProviderError(response.status, await parseErrorResponse(response));
+      throw toProviderError(response, await parseErrorResponse(response));
     }
     if (!response.body) {
       throw new ProviderError("Gemini API tidak mengembalikan response body streaming", "upstream_error");

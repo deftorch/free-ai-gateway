@@ -53,4 +53,4 @@ export function clearPools() {
   }
 }
 
-export { KeyPoolManager };
+export { KeyPoolManager, NoAvailableKeyError } from "./key-pool";

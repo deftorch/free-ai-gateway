@@ -93,11 +93,25 @@ function mapFinishReason(
 
 /** Klasifikasi error -> kategori generik ProviderError. Format error NVIDIA
  * mengikuti konvensi OpenAI: status HTTP jadi sinyal utama, bukan `type`. */
-function toProviderError(status: number, body: OpenAICompatErrorBody | null): ProviderError {
+function toProviderError(response: Response, body: OpenAICompatErrorBody | null): ProviderError {
+  const status = response.status;
   const message = body?.error?.message ?? `NVIDIA NIM API error, HTTP ${status}`;
 
-  if (status === 429) return new ProviderError(message, "rate_limited");
-  if (status === 401 || status === 403) return new ProviderError(message, "auth_failed");
+  if (status === 429) {
+    let retryAfterMs: number | undefined;
+    const retryAfter = response.headers.get("Retry-After");
+    if (retryAfter) {
+      const parsed = parseInt(retryAfter, 10);
+      if (!isNaN(parsed)) {
+        retryAfterMs = parsed * 1000;
+      }
+    }
+    return new ProviderError(message, "rate_limited", retryAfterMs);
+  }
+  if (status === 401 || status === 403) {
+    // SENGAJA belum ada: Penanganan kind: "auth_failed" (nonaktif permanen) (Step TBD)
+    return new ProviderError(message, "auth_failed");
+  }
   if (status === 404) return new ProviderError(message, "model_not_found");
   return new ProviderError(message, "upstream_error");
 }
@@ -137,7 +151,7 @@ export const nvidiaNimAdapter: ProviderAdapter = {
     }
 
     if (!response.ok) {
-      throw toProviderError(response.status, await parseErrorResponse(response));
+      throw toProviderError(response, await parseErrorResponse(response));
     }
 
     const data = (await response.json()) as OpenAICompatModelsResponse;
@@ -176,7 +190,7 @@ export const nvidiaNimAdapter: ProviderAdapter = {
     }
 
     if (!response.ok) {
-      throw toProviderError(response.status, await parseErrorResponse(response));
+      throw toProviderError(response, await parseErrorResponse(response));
     }
 
     const data = (await response.json()) as OpenAICompatChatResponse;
@@ -220,7 +234,7 @@ export const nvidiaNimAdapter: ProviderAdapter = {
     }
 
     if (!response.ok) {
-      throw toProviderError(response.status, await parseErrorResponse(response));
+      throw toProviderError(response, await parseErrorResponse(response));
     }
     if (!response.body) {
       throw new ProviderError("NVIDIA NIM API tidak mengembalikan response body streaming", "upstream_error");

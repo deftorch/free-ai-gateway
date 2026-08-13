@@ -28,7 +28,10 @@ beforeAll(() => {
     
     // Simulate 429 error if a specific API key is used
     if (apiKey && apiKey.includes("trigger-429")) {
-      return new Response(JSON.stringify({ error: { message: "Rate limit exceeded" } }), { status: 429 });
+      return new Response(JSON.stringify({ error: { message: "Rate limit exceeded" } }), {
+        status: 429,
+        headers: { "Retry-After": "45" },
+      });
     }
 
     let fixtureName = "";
@@ -93,7 +96,7 @@ describe.each(adaptersToTest)("Contract: $providerId adapter", (adapter) => {
     expect(result.text).toBeTypeOf("string");
   });
 
-  it("chatCompletion() melempar ProviderError berkategori rate_limited saat fixture 429", async () => {
+  it("chatCompletion() melempar ProviderError berkategori rate_limited dan membaca Retry-After saat fixture 429", async () => {
     await expect(adapter.chatCompletion("trigger-429", {
       model: "dummy-model",
       messages: [{ role: "user", content: "test" }]
@@ -107,6 +110,9 @@ describe.each(adaptersToTest)("Contract: $providerId adapter", (adapter) => {
     } catch (error) {
       if (error instanceof ProviderError) {
         expect(error.kind).toBe("rate_limited");
+        expect(error.retryAfterMs).toBe(45000); // 45 seconds -> 45000 ms
+      } else {
+        throw error;
       }
     }
   });

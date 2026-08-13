@@ -1,7 +1,7 @@
 import { Hono } from "hono";
 import { streamSSE } from "hono/streaming";
 import type { ProviderAdapter } from "@free-ai-gateway/core";
-import { ProviderError, getProviderPool } from "@free-ai-gateway/core";
+import { ProviderError, getProviderPool, NoAvailableKeyError } from "@free-ai-gateway/core";
 import { geminiAdapter } from "@free-ai-gateway/adapter-gemini";
 import { nvidiaNimAdapter } from "@free-ai-gateway/adapter-nvidia-nim";
 import { chatCompletionRequestSchema } from "./schemas/chat-completion";
@@ -94,6 +94,18 @@ app.post("/v1/chat/completions", async (c) => {
     const pool = getProviderPool(body.provider);
     apiKey = pool.selectNextKey();
   } catch (err) {
+    if (err instanceof NoAvailableKeyError) {
+      return c.json(
+        {
+          error: {
+            message: `Semua key untuk provider '${body.provider}' sedang dalam masa cooldown.`,
+            type: "all_keys_exhausted",
+            next_available_at: new Date(err.nextAvailableAt).toISOString(),
+          },
+        },
+        429,
+      );
+    }
     return c.json({ error: { message: (err as Error).message, type: "config_error" } }, 500);
   }
 
@@ -128,6 +140,10 @@ app.post("/v1/chat/completions", async (c) => {
         await stream.writeSSE({ data: "[DONE]" });
       } catch (err) {
         if (err instanceof ProviderError) {
+          if (err.kind === "rate_limited") {
+            const pool = getProviderPool(body.provider);
+            pool.markCooldown(apiKey, err.retryAfterMs);
+          }
           const { body: errBody } = providerErrorToResponse(err);
           await stream.writeSSE({ data: JSON.stringify(errBody) });
         } else {
@@ -160,6 +176,10 @@ app.post("/v1/chat/completions", async (c) => {
     });
   } catch (err) {
     if (err instanceof ProviderError) {
+      if (err.kind === "rate_limited") {
+        const pool = getProviderPool(body.provider);
+        pool.markCooldown(apiKey, err.retryAfterMs);
+      }
       const { status, body: errBody } = providerErrorToResponse(err);
       return c.json(errBody, status as 429 | 401 | 404 | 502 | 503);
     }
