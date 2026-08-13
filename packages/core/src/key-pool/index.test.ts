@@ -1,5 +1,8 @@
-import { describe, it, expect, beforeEach, afterEach } from "vitest";
-import { getProviderPool, initializeAllPools, clearPools } from "./index";
+import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
+import { getProviderPool, initializeAllPools, clearPools, recordCooldown } from "./index";
+import { keyCooldowns } from "../db/schema";
+import { db as dbInstance } from "../db/index";
+import { createHash } from "crypto";
 
 describe("Provider Key Registry", () => {
   const originalEnv = process.env;
@@ -42,11 +45,7 @@ describe("Provider Key Registry", () => {
   });
 });
 
-import { recordCooldown } from "./index";
-import { keyCooldowns } from "../db/schema";
-import { db as dbInstance } from "../db/index";
-import { createHash } from "crypto";
-import { vi } from "vitest";
+
 
 describe("Cooldown Persistence", () => {
   const originalEnv = process.env;

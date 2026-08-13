@@ -1,4 +1,4 @@
-import { sqliteTable, text } from "drizzle-orm/sqlite-core";
+import { sqliteTable, text, integer, unique } from "drizzle-orm/sqlite-core";
 
 export const tenants = sqliteTable("tenants", {
   id: text("id").primaryKey(),
@@ -26,7 +26,7 @@ export const providerKeys = sqliteTable("provider_keys", {
   encryptedKey: text("encrypted_key").notNull(), // Dormant until Step 11
 });
 
-import { integer, unique } from "drizzle-orm/sqlite-core";
+
 
 export const keyCooldowns = sqliteTable("key_cooldowns", {
   id: text("id").primaryKey(), // provider:keyHash

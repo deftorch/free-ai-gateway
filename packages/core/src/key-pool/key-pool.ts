@@ -21,6 +21,10 @@ export class KeyPoolManager {
     this.cooldowns.set(key, Date.now() + durationMs);
   }
 
+  getCooldownUntil(key: string): number | undefined {
+    return this.cooldowns.get(key);
+  }
+
   selectNextKey(): string {
     const now = Date.now();
     let minCooldown = Infinity;

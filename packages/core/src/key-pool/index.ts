@@ -48,8 +48,7 @@ export async function recordCooldown(providerName: string, key: string, retryAft
   const pool = getProviderPool(providerName);
   pool.markCooldown(key, retryAfterMs);
   
-  const durationMs = retryAfterMs && retryAfterMs > 0 ? retryAfterMs : 30000;
-  const cooldownUntil = Date.now() + durationMs;
+  const cooldownUntil = pool.getCooldownUntil(key) || (Date.now() + 30000);
 
   const keyHash = createHash("sha256").update(key).digest("hex");
   const id = `${providerName}:${keyHash}`;
