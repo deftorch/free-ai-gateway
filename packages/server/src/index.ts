@@ -1,7 +1,7 @@
 import { Hono } from "hono";
 import { streamSSE } from "hono/streaming";
 import type { ProviderAdapter } from "@free-ai-gateway/core";
-import { ProviderError } from "@free-ai-gateway/core";
+import { ProviderError, getProviderPool } from "@free-ai-gateway/core";
 import { geminiAdapter } from "@free-ai-gateway/adapter-gemini";
 import { nvidiaNimAdapter } from "@free-ai-gateway/adapter-nvidia-nim";
 import { chatCompletionRequestSchema } from "./schemas/chat-completion";
@@ -10,13 +10,21 @@ import { chatCompletionRequestSchema } from "./schemas/chat-completion";
  * Titik masuk HTTP.
  * Step 1: provider kedua (NVIDIA NIM) + kontrak ProviderAdapter terbukti generik.
  * Step 2: Virtual API key auth & provider scope enforcement aktif.
+ * Step 3: Multi-key round-robin provider pool.
  *
- * SENGAJA belum ada: multi-key / provider fallback rotasi (Step 3 & 9) --
- * kredensial asli provider masih diambil langsung dari env var untuk kesederhanaan saat ini.
+ * SENGAJA belum ada: provider fallback rotasi (Step 9) --
+ * kredensial asli provider dibaca di core dari env var dan di-pool di sana.
  */
 import { requireAuth } from "./middleware/auth";
 
-const app = new Hono();
+export type AppEnv = {
+  Variables: {
+    tenantId: string;
+    scopes: string[];
+  };
+};
+
+const app = new Hono<AppEnv>();
 
 app.get("/healthz", (c) => c.json({ status: "ok" }));
 
@@ -27,24 +35,6 @@ const adapters: Record<string, ProviderAdapter> = {
   gemini: geminiAdapter,
   "nvidia-nim": nvidiaNimAdapter,
 };
-
-/** Nama env var per provider. Step 1 = 1 key per provider, tidak ada rotasi (Step 3). */
-const envVarByProvider: Record<string, string> = {
-  gemini: "GEMINI_API_KEYS",
-  "nvidia-nim": "NVIDIA_API_KEYS",
-};
-
-function getApiKey(provider: string): string {
-  const envVar = envVarByProvider[provider];
-  const raw = envVar ? process.env[envVar] : undefined;
-  const key = raw?.split(",")[0]?.trim();
-  if (!key) {
-    throw new Error(
-      `${envVar} belum diset di .env. Isi minimal 1 key ${provider} sebelum menjalankan server.`,
-    );
-  }
-  return key;
-}
 
 /** Map ProviderError generik -> status HTTP + body error format OpenAI. */
 function providerErrorToResponse(err: ProviderError): { status: number; body: unknown } {
@@ -97,7 +87,8 @@ app.post("/v1/chat/completions", async (c) => {
 
   let apiKey: string;
   try {
-    apiKey = getApiKey(body.provider);
+    const pool = getProviderPool(body.provider);
+    apiKey = pool.selectNextKey();
   } catch (err) {
     return c.json({ error: { message: (err as Error).message, type: "config_error" } }, 500);
   }

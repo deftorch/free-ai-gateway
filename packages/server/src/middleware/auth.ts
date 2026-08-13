@@ -2,8 +2,9 @@ import type { MiddlewareHandler } from "hono";
 import { db, virtualKeys } from "@free-ai-gateway/core";
 import { eq } from "drizzle-orm";
 import { createHash } from "crypto";
+import type { AppEnv } from "../index";
 
-export const requireAuth: MiddlewareHandler = async (c, next) => {
+export const requireAuth: MiddlewareHandler<AppEnv> = async (c, next) => {
   const authHeader = c.req.header("Authorization");
   
   if (!authHeader || !authHeader.startsWith("Bearer ")) {
@@ -24,7 +25,7 @@ export const requireAuth: MiddlewareHandler = async (c, next) => {
 
   // Inject tenant_id and scopes to context
   c.set("tenantId", keyRecord.tenantId);
-  c.set("scopes", keyRecord.scopes);
+  c.set("scopes", keyRecord.scopes as string[]);
 
   await next();
 };

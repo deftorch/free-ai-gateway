@@ -7,7 +7,8 @@
 import { describe, it, expect, vi, beforeAll, afterAll } from "vitest";
 import { readFileSync } from "fs";
 import { join } from "path";
-import { ProviderAdapter, ProviderError } from "../../packages/core/src/adapter.contract";
+import type { ProviderAdapter } from "../../packages/core/src/adapter.contract";
+import { ProviderError } from "../../packages/core/src/adapter.contract";
 import { nvidiaNimAdapter } from "../nvidia-nim/src/adapter";
 import { geminiAdapter } from "../gemini/src/adapter";
 
@@ -39,7 +40,9 @@ beforeAll(() => {
          try {
            const body = JSON.parse(options.body as string);
            isStream = !!body.stream;
-         } catch(e) {}
+         } catch {
+           // ignore parse errors
+         }
       }
       if (urlStr.includes(":streamGenerateContent")) {
          isStream = true;
@@ -101,8 +104,10 @@ describe.each(adaptersToTest)("Contract: $providerId adapter", (adapter) => {
         model: "dummy-model",
         messages: [{ role: "user", content: "test" }]
       });
-    } catch (error: any) {
-      expect(error.kind).toBe("rate_limited");
+    } catch (error) {
+      if (error instanceof ProviderError) {
+        expect(error.kind).toBe("rate_limited");
+      }
     }
   });
 

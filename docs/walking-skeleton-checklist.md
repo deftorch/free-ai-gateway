@@ -13,7 +13,7 @@ itu sinyal untuk berhenti dan tanya, bukan mengerjakan di luar urutan.
 | 0 | Single-file proxy: 1 provider, 1 key, forward apa adanya (validasi jalur end-to-end + streaming) | ⚠️ opsional (boleh spike dulu) | ✅ |
 | 1 | Provider kedua + kontrak `ProviderAdapter` | ✅ (contract test) | ✅ |
 | 2 | Virtual API key + kolom `tenant_id` di skema sejak awal | ✅ (keamanan) | ✅ |
-| 3 | Multi-key per provider + rotasi round-robin | ✅ | ⬜ |
+| 3 | Multi-key per provider + rotasi round-robin | ✅ | ✅ |
 | 4 | Deteksi 429 + cooldown (in-memory) | ✅ | ⬜ |
 | 5 | Persist state ke SQLite/KV | ✅ | ⬜ |
 | 6 | Config file + `docker-compose.yml` (titik "bisa dibagikan ke orang lain") | ❌ | ⬜ |
