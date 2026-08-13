@@ -25,3 +25,15 @@ export const providerKeys = sqliteTable("provider_keys", {
   provider: text("provider").notNull(),
   encryptedKey: text("encrypted_key").notNull(), // Dormant until Step 11
 });
+
+import { integer, unique } from "drizzle-orm/sqlite-core";
+
+export const keyCooldowns = sqliteTable("key_cooldowns", {
+  id: text("id").primaryKey(), // provider:keyHash
+  provider: text("provider").notNull(),
+  keyHash: text("key_hash").notNull(),
+  cooldownUntil: integer("cooldown_until").notNull(),
+  updatedAt: text("updated_at").notNull(),
+}, (table) => ({
+  uniqueProviderKey: unique().on(table.provider, table.keyHash),
+}));

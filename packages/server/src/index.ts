@@ -16,10 +16,10 @@ import { chatCompletionRequestSchema } from "./schemas/chat-completion";
  * kredensial asli provider dibaca di core dari env var dan di-pool di sana.
  */
 import { requireAuth } from "./middleware/auth";
-import { initializeAllPools } from "@free-ai-gateway/core";
+import { initializeAllPools, recordCooldown } from "@free-ai-gateway/core";
 
 // Fail-fast at startup if any provider is missing its credentials
-initializeAllPools();
+await initializeAllPools();
 
 export type AppEnv = {
   Variables: {
@@ -141,8 +141,7 @@ app.post("/v1/chat/completions", async (c) => {
       } catch (err) {
         if (err instanceof ProviderError) {
           if (err.kind === "rate_limited") {
-            const pool = getProviderPool(body.provider);
-            pool.markCooldown(apiKey, err.retryAfterMs);
+            await recordCooldown(body.provider, apiKey, err.retryAfterMs);
           }
           const { body: errBody } = providerErrorToResponse(err);
           await stream.writeSSE({ data: JSON.stringify(errBody) });
@@ -177,8 +176,7 @@ app.post("/v1/chat/completions", async (c) => {
   } catch (err) {
     if (err instanceof ProviderError) {
       if (err.kind === "rate_limited") {
-        const pool = getProviderPool(body.provider);
-        pool.markCooldown(apiKey, err.retryAfterMs);
+        await recordCooldown(body.provider, apiKey, err.retryAfterMs);
       }
       const { status, body: errBody } = providerErrorToResponse(err);
       return c.json(errBody, status as 429 | 401 | 404 | 502 | 503);
