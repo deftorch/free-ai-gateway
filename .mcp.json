@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "free-ai-gateway-dev": {
+      "command": "bun",
+      "args": ["--filter", "@free-ai-gateway/mcp-server", "dev"],
+      "_note": "Menyambungkan Claude Code ke MCP server versi dev proyek ini sendiri. Belum bisa dipakai sampai packages/mcp-server diimplementasikan (walking skeleton step 10, §12.1) — saat ini akan langsung error karena src/index.ts sengaja throw."
+    }
+  }
+}

@@ -1,0 +1,13 @@
+name: Anti-mock gate
+
+on:
+  pull_request:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Cek mock/stub/TODO/placeholder di kode produksi
+        run: bash scripts/anti-mock-check.sh

@@ -1,0 +1,101 @@
+{
+  "_meta": {
+    "description": "Registry lokal provider gratis (§10.3 dokumen desain). Kolom di sini adalah yang TIDAK ada di registry umum seperti models.dev (butuh kartu kredit, dsb) — bukan sumber kebenaran untuk daftar model yang tersedia SAAT INI, itu tugas health-check runtime + models.dev.",
+    "snapshot_date": "pertengahan-2026",
+    "status": "SNAPSHOT — wajib diverifikasi ulang sebelum dipakai sebagai keputusan produksi, lihat §10.2 dokumen desain: free tier berubah bulanan, kadang tanpa pengumuman",
+    "review_cadence": "awal tiap bulan, via PR komunitas + review manual"
+  },
+  "providers": [
+    {
+      "id": "gemini",
+      "displayName": "Google AI Studio / Gemini API",
+      "signupUrl": "https://aistudio.google.com/",
+      "requiresCreditCard": false,
+      "keyExpiry": "tanpa expiry",
+      "notes": "Gemini 2.0 sudah dipensiunkan Juni 2026 — jangan hardcode nama model ini, verifikasi lewat health-check.",
+      "rateLimitSummary": "~1.500 request/hari (snapshot, cek dashboard untuk angka terkini)"
+    },
+    {
+      "id": "groq",
+      "displayName": "Groq",
+      "signupUrl": "https://console.groq.com/",
+      "requiresCreditCard": false,
+      "keyExpiry": "tanpa expiry",
+      "notes": "Angka rate limit resmi ada di tabel Groq, jangan pakai angka lama 1.500 RPD yang sudah tidak berlaku.",
+      "rateLimitSummary": "llama-3.3-70b-versatile: 30 RPM, 1.000 RPD, 12K TPM, 100K TPD (snapshot)"
+    },
+    {
+      "id": "cerebras",
+      "displayName": "Cerebras",
+      "signupUrl": "https://cloud.cerebras.ai/",
+      "requiresCreditCard": false,
+      "keyExpiry": "tanpa expiry",
+      "notes": "Volume harian mentah tertinggi di antara provider gratis per riset.",
+      "rateLimitSummary": "~1 juta token/hari (snapshot)"
+    },
+    {
+      "id": "openrouter",
+      "displayName": "OpenRouter",
+      "signupUrl": "https://openrouter.ai/models?max_price=0",
+      "requiresCreditCard": false,
+      "keyExpiry": "tanpa expiry",
+      "notes": "25+ model gratis lewat satu API key, termasuk varian Llama/Mixtral/DeepSeek. Rate limit per-model, cek dashboard.",
+      "rateLimitSummary": "bervariasi per model, umumnya puluhan RPM (snapshot)"
+    },
+    {
+      "id": "github-models",
+      "displayName": "GitHub Models",
+      "signupUrl": "https://github.com/marketplace/models",
+      "requiresCreditCard": false,
+      "keyExpiry": "terikat akun GitHub",
+      "notes": "Campuran model (OpenAI, Llama, dll) untuk keperluan development.",
+      "rateLimitSummary": "limit harian per model (snapshot)"
+    },
+    {
+      "id": "cloudflare-workers-ai",
+      "displayName": "Cloudflare Workers AI",
+      "signupUrl": "https://developers.cloudflare.com/workers-ai/",
+      "requiresCreditCard": false,
+      "keyExpiry": "tanpa expiry",
+      "notes": "Model open-weight dihost Cloudflare, kuota berbasis neuron.",
+      "rateLimitSummary": "kuota harian gratis (neuron-based), cocok beban ringan di edge"
+    },
+    {
+      "id": "mistral",
+      "displayName": "Mistral AI (La Plateforme)",
+      "signupUrl": "https://console.mistral.ai/",
+      "requiresCreditCard": false,
+      "keyExpiry": "cek dashboard",
+      "notes": "Tier developer gratis, cek dashboard untuk limit terkini.",
+      "rateLimitSummary": "cek dashboard (snapshot tidak spesifik)"
+    },
+    {
+      "id": "nvidia-nim",
+      "displayName": "NVIDIA NIM",
+      "signupUrl": "https://build.nvidia.com/",
+      "requiresCreditCard": false,
+      "keyExpiry": "cek dashboard",
+      "notes": "Berbagai model open-weight lewat NIM API.",
+      "rateLimitSummary": "cek dashboard (snapshot tidak spesifik)"
+    },
+    {
+      "id": "huggingface",
+      "displayName": "Hugging Face Inference API",
+      "signupUrl": "https://huggingface.co/inference-api",
+      "requiresCreditCard": false,
+      "keyExpiry": "cek dashboard",
+      "notes": "Ribuan model tersedia, rate limit ketat di akun gratis, cold-start kadang lambat.",
+      "rateLimitSummary": "ketat, bervariasi per model (snapshot)"
+    },
+    {
+      "id": "cohere",
+      "displayName": "Cohere",
+      "signupUrl": "https://dashboard.cohere.com/",
+      "requiresCreditCard": false,
+      "keyExpiry": "trial key, kuota bulanan terbatas",
+      "notes": "Model Command seri terbaru di trial key.",
+      "rateLimitSummary": "kuota trial bulanan (snapshot)"
+    }
+  ],
+  "privacy_warning": "\"Gratis\" hampir selalu berarti data prompt dipakai untuk training oleh provider (§10.1 catatan). Jangan pakai tier gratis untuk data produksi/pelanggan sensitif — ini WAJIB ditulis eksplisit di README proyek."
+}

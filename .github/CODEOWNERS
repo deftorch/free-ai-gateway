@@ -1,0 +1,8 @@
+# Area keamanan-sensitif wajib direview manusia — lihat CLAUDE.md §12.3
+# "Review kode keamanan-sensitif (enkripsi key, auth, MCP tool scoping): manusia wajib"
+
+/packages/core/src/auth/           @maintainer-keamanan
+/packages/core/src/crypto/         @maintainer-keamanan
+/packages/mcp-server/              @maintainer-keamanan
+/docs/adr/                          @maintainer-arsitektur
+/packages/core/src/adapter.contract.ts  @maintainer-arsitektur

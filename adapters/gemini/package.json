@@ -1,0 +1,20 @@
+{
+  "name": "@free-ai-gateway/adapter-gemini",
+  "private": true,
+  "version": "0.0.1",
+  "type": "module",
+  "main": "./src/adapter.ts",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "test": "vitest run",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@free-ai-gateway/core": "workspace:*"
+  },
+  "devDependencies": {
+    "vitest": "^2.1.0",
+    "typescript": "^5.6.0"
+  }
+}

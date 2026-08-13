@@ -1,0 +1,2 @@
+bunx lint-staged
+bash scripts/anti-mock-check.sh

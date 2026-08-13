@@ -1,0 +1,25 @@
+# Config Cloudflare Workers — target deploy serverless utama (§5, §11 Fase 1)
+# Deploy: `wrangler deploy` dari root repo, atau tombol "Deploy to Cloudflare"
+
+name = "free-ai-gateway"
+main = "packages/server/dist/index.js"
+compatibility_date = "2026-01-01"
+compatibility_flags = ["nodejs_compat"]
+
+# KV namespace untuk key pool status & rate-limit counter (§5: KVStore interface)
+# Buat dulu dengan: wrangler kv namespace create GATEWAY_KV
+[[kv_namespaces]]
+binding = "GATEWAY_KV"
+id = "GANTI_DENGAN_ID_KV_NAMESPACE_ANDA"
+
+# Secrets (JANGAN ditulis di sini) — set lewat:
+#   wrangler secret put GEMINI_API_KEYS
+#   wrangler secret put ENCRYPTION_KEY
+# dst, sesuai daftar di .env.example
+
+[vars]
+MULTI_TENANT_MODE = "off"
+REGISTRY_SYNC_INTERVAL_HOURS = "6"
+
+[observability]
+enabled = true
