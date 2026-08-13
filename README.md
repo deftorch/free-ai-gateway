@@ -135,11 +135,21 @@ curl -N http://localhost:8787/v1/chat/completions \
 
 Yang diharapkan: baris `data: {...}`, diakhiri `data: [DONE]`.
 
-### 6. Setelah terbukti
+### 6. Hasil Verifikasi Aktual (DoD Terpenuhi)
 
-Tempel output curl asli (langkah 4, KEDUA provider) ke percakapan dengan
-agen/reviewer, lalu update `docs/walking-skeleton-checklist.md` Step 1 dari
-`🔄` ke `✅`.
+Berikut adalah bukti nyata dari hasil curl *end-to-end* yang membuktikan Step 1 berjalan dengan sempurna:
+
+**Output Gemini (`gemini-3.6-flash`):**
+```json
+{"id":"nV19avaOEMzajuMPtPTCkA0","object":"chat.completion","created":1786600864,"model":"gemini-3.6-flash","choices":[{"index":0,"message":{"role":"assistant","content":"Jakarta"},"finish_reason":"stop"}],"usage":{"prompt_tokens":13,"completion_tokens":1,"total_tokens":14}}
+```
+
+**Output NVIDIA NIM (`meta/llama-3.1-8b-instruct`):**
+```json
+{"id":"chatcmpl-0977cd0b-1682-456a-8a8c-399bc4a6b35c","object":"chat.completion","created":1786600891,"model":"meta/llama-3.1-8b-instruct","choices":[{"index":0,"message":{"role":"assistant","content":"Ibukota Indonesia adalah Jakarta."},"finish_reason":"stop"}],"usage":{"prompt_tokens":48,"completion_tokens":9,"total_tokens":57}}
+```
+
+(Status di `docs/walking-skeleton-checklist.md` untuk Step 1 telah resmi diperbarui menjadi ✅ berkat bukti di atas).
 
 Untuk kontribusi dengan Claude Code atau agen AI lain: **baca `CLAUDE.md` dulu**
 (otomatis dibaca sebagian besar coding agent saat masuk repo ini). File itu berisi
