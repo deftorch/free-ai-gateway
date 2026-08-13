@@ -78,6 +78,11 @@ interface GeminiErrorBody {
     code: number;
     message: string;
     status: string; // mis. "RESOURCE_EXHAUSTED", "PERMISSION_DENIED", "NOT_FOUND"
+    details?: Array<{
+      "@type": string;
+      retryDelay?: string; // e.g. "9s", "34s"
+      [key: string]: unknown;
+    }>;
   };
 }
 
@@ -129,13 +134,29 @@ function toProviderError(response: Response, body: GeminiErrorBody | null): Prov
 
   if (status === 429 || googleStatus === "RESOURCE_EXHAUSTED") {
     let retryAfterMs: number | undefined;
-    const retryAfter = response.headers.get("Retry-After");
-    if (retryAfter) {
-      const parsed = parseInt(retryAfter, 10);
+
+    // Sumber utama: error.details dari body JSON (kebiasaan nyata Gemini)
+    const retryInfo = body?.error?.details?.find((d) => d["@type"]?.includes("RetryInfo"));
+    if (retryInfo?.retryDelay) {
+      // Format dari google.rpc.Duration adalah string berakhiran "s", misal "34s"
+      const secondsStr = retryInfo.retryDelay.replace("s", "");
+      const parsed = parseFloat(secondsStr);
       if (!isNaN(parsed)) {
         retryAfterMs = parsed * 1000;
       }
     }
+
+    // Fallback: cek HTTP header Retry-After
+    if (retryAfterMs === undefined) {
+      const retryAfter = response.headers.get("Retry-After");
+      if (retryAfter) {
+        const parsed = parseInt(retryAfter, 10);
+        if (!isNaN(parsed)) {
+          retryAfterMs = parsed * 1000;
+        }
+      }
+    }
+
     return new ProviderError(message, "rate_limited", retryAfterMs);
   }
   if (status === 401 || status === 403 || googleStatus === "PERMISSION_DENIED") {

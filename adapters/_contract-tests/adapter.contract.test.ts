@@ -28,10 +28,29 @@ beforeAll(() => {
     
     // Simulate 429 error if a specific API key is used
     if (apiKey && apiKey.includes("trigger-429")) {
-      return new Response(JSON.stringify({ error: { message: "Rate limit exceeded" } }), {
-        status: 429,
-        headers: { "Retry-After": "45" },
-      });
+      if (providerId === "gemini") {
+        return new Response(
+          JSON.stringify({
+            error: {
+              code: 429,
+              message: "Quota exceeded",
+              status: "RESOURCE_EXHAUSTED",
+              details: [
+                {
+                  "@type": "type.googleapis.com/google.rpc.RetryInfo",
+                  retryDelay: "45s",
+                },
+              ],
+            },
+          }),
+          { status: 429 } // Tanpa Retry-After header
+        );
+      } else {
+        return new Response(JSON.stringify({ error: { message: "Rate limit exceeded" } }), {
+          status: 429,
+          headers: { "Retry-After": "45" },
+        });
+      }
     }
 
     let fixtureName = "";
