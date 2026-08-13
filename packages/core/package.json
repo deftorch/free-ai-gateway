@@ -10,7 +10,9 @@
     "dev": "tsc -p tsconfig.json --watch",
     "test": "vitest run",
     "lint": "eslint .",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "db:push": "drizzle-kit push",
+    "db:push:test": "DB_FILE_PATH=../../test.sqlite drizzle-kit push"
   },
   "dependencies": {
     "drizzle-orm": "^0.45.2",

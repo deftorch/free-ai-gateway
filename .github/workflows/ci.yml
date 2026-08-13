@@ -24,6 +24,9 @@ jobs:
       - name: Typecheck
         run: bun run typecheck
 
+      - name: Setup Database (Test)
+        run: bun run db:push:test
+
       - name: Unit test
         run: bun run test
 

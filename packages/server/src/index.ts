@@ -7,15 +7,12 @@ import { nvidiaNimAdapter } from "@free-ai-gateway/adapter-nvidia-nim";
 import { chatCompletionRequestSchema } from "./schemas/chat-completion";
 
 /**
- * Titik masuk HTTP. Step 1 walking skeleton (§12.1): provider kedua (NVIDIA
- * NIM) + kontrak ProviderAdapter dipakai lintas 2 provider yang formatnya
- * beda jauh (Gemini custom, NVIDIA NIM OpenAI-compatible) -- membuktikan
- * kontrak generic, bukan diam-diam Gemini-spesifik.
+ * Titik masuk HTTP.
+ * Step 1: provider kedua (NVIDIA NIM) + kontrak ProviderAdapter terbukti generik.
+ * Step 2: Virtual API key auth & provider scope enforcement aktif.
  *
- * SENGAJA belum ada: multi-key (Step 3), auto-resolve provider dari nama
- * model / fallback (Step 9), virtual key/tenant lookup (Step 2) -- key
- * diambil langsung dari env var, bukan dari database. Jangan tambahkan itu
- * di sini, itu scope step berikutnya -- lihat docs/walking-skeleton-checklist.md.
+ * SENGAJA belum ada: multi-key / provider fallback rotasi (Step 3 & 9) --
+ * kredensial asli provider masih diambil langsung dari env var untuk kesederhanaan saat ini.
  */
 import { requireAuth } from "./middleware/auth";
 
@@ -86,6 +83,15 @@ app.post("/v1/chat/completions", async (c) => {
     return c.json(
       { error: { message: `Provider tidak dikenal: ${body.provider}`, type: "invalid_request" } },
       400,
+    );
+  }
+
+  // Authorization: Periksa apakah token memiliki scope untuk provider yang direquest
+  const scopes = c.get("scopes") as string[];
+  if (!scopes.includes(body.provider)) {
+    return c.json(
+      { error: { message: `Akses ditolak: Virtual key tidak memiliki izin (scope) untuk provider '${body.provider}'.`, type: "auth_failed" } },
+      403,
     );
   }
 

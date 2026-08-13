@@ -155,9 +155,10 @@ Berikut adalah bukti nyata dari hasil curl *end-to-end* yang membuktikan Step 1 
 
 Mulai dari Step 2, _endpoint_ `/v1/chat/completions` dilindungi oleh **Virtual API Key**. Anda tidak bisa lagi menembaknya tanpa *header* autentikasi.
 
-**A. Membuat Virtual Key Pertama Anda:**
-Jalankan skrip CLI ringan ini untuk melakukan *seed* penyewa (tenant) `default` dan menerbitkan kunci baru:
+**A. Setup Database & Membuat Virtual Key Pertama Anda:**
+Jalankan migrasi skema database terlebih dahulu, lalu jalankan skrip CLI ringan untuk melakukan *seed* penyewa (tenant) `default` dan menerbitkan kunci baru:
 ```bash
+bun run db:push
 bun run scripts/create-virtual-key.ts
 ```
 *(Catatan: Simpan kunci `fag_sk_...` yang muncul, karena ini hanya ditampilkan sekali!)*
