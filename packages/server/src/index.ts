@@ -17,9 +17,13 @@ import { chatCompletionRequestSchema } from "./schemas/chat-completion";
  * diambil langsung dari env var, bukan dari database. Jangan tambahkan itu
  * di sini, itu scope step berikutnya -- lihat docs/walking-skeleton-checklist.md.
  */
+import { requireAuth } from "./middleware/auth";
+
 const app = new Hono();
 
 app.get("/healthz", (c) => c.json({ status: "ok" }));
+
+app.use("/v1/*", requireAuth);
 
 /** Registry adapter yang aktif. Tambah provider baru = tambah 1 baris di sini. */
 const adapters: Record<string, ProviderAdapter> = {

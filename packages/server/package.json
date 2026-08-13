@@ -11,11 +11,12 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "hono": "^4.6.0",
-    "zod": "^3.23.0",
-    "@free-ai-gateway/core": "workspace:*",
     "@free-ai-gateway/adapter-gemini": "workspace:*",
-    "@free-ai-gateway/adapter-nvidia-nim": "workspace:*"
+    "@free-ai-gateway/adapter-nvidia-nim": "workspace:*",
+    "@free-ai-gateway/core": "workspace:*",
+    "drizzle-orm": "^0.45.2",
+    "hono": "^4.6.0",
+    "zod": "^3.23.0"
   },
   "devDependencies": {
     "vitest": "^2.1.0",

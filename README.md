@@ -151,6 +151,32 @@ Berikut adalah bukti nyata dari hasil curl *end-to-end* yang membuktikan Step 1 
 
 (Status di `docs/walking-skeleton-checklist.md` untuk Step 1 telah resmi diperbarui menjadi ✅ berkat bukti di atas).
 
+### 7. Verifikasi Step 2: Virtual API Key & Database
+
+Mulai dari Step 2, _endpoint_ `/v1/chat/completions` dilindungi oleh **Virtual API Key**. Anda tidak bisa lagi menembaknya tanpa *header* autentikasi.
+
+**A. Membuat Virtual Key Pertama Anda:**
+Jalankan skrip CLI ringan ini untuk melakukan *seed* penyewa (tenant) `default` dan menerbitkan kunci baru:
+```bash
+bun run scripts/create-virtual-key.ts
+```
+*(Catatan: Simpan kunci `fag_sk_...` yang muncul, karena ini hanya ditampilkan sekali!)*
+
+**B. Pengujian Akses (Auth Middleware):**
+Gunakan kunci rahasia tersebut di dalam *header* `Authorization` saat melakukan cURL:
+```bash
+curl -s http://localhost:8787/v1/chat/completions \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer fag_sk_KUNCI_RAHASIA_ANDA" \
+  -d '{
+    "provider": "gemini",
+    "model": "gemini-3.6-flash",
+    "messages": [{"role": "user", "content": "Hai"}]
+  }'
+```
+
+Untuk menguji fitur keamanan (ADR 0004), Anda dapat mencoba menyelundupkan *header* `X-Tenant-Id: peretas` — *gateway* ini dijamin akan mengabaikannya dan tetap murni menggunakan data dari *database* lokal (Drizzle + SQLite).
+
 Untuk kontribusi dengan Claude Code atau agen AI lain: **baca `CLAUDE.md` dulu**
 (otomatis dibaca sebagian besar coding agent saat masuk repo ini). File itu berisi
 aturan keras yang wajib diikuti (anti-mock, anti-hardcode nama model, aturan
