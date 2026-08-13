@@ -16,6 +16,10 @@ import { chatCompletionRequestSchema } from "./schemas/chat-completion";
  * kredensial asli provider dibaca di core dari env var dan di-pool di sana.
  */
 import { requireAuth } from "./middleware/auth";
+import { initializeAllPools } from "@free-ai-gateway/core";
+
+// Fail-fast at startup if any provider is missing its credentials
+initializeAllPools();
 
 export type AppEnv = {
   Variables: {
