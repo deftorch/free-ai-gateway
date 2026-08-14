@@ -12,7 +12,7 @@ COPY adapters/gemini/package.json adapters/gemini/package.json
 COPY adapters/nvidia-nim/package.json adapters/nvidia-nim/package.json
 COPY adapters/_contract-tests/package.json adapters/_contract-tests/package.json
 COPY packages/web/package.json packages/web/package.json
-RUN bun install --frozen-lockfile
+RUN bun install --frozen-lockfile --ignore-scripts || bun install --frozen-lockfile --ignore-scripts
 
 FROM deps AS build
 COPY . .
