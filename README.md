@@ -185,8 +185,8 @@ keamanan virtual key) dan Definition of Done yang konkret.
 
 ## Deploy
 
-- **Cloudflare Workers**: `wrangler deploy` (config di `deploy/wrangler.toml`)
-- **Self-host Docker**: `docker compose -f deploy/docker-compose.yml up -d`
+- **Self-host Docker** (Rekomendasi saat ini): `docker compose -f deploy/docker-compose.yml up -d`
+- **Cloudflare Workers**: Target direncanakan tapi belum didukung saat ini (lihat `deploy/wrangler.toml` dan `docs/adr/000X-workers-belum-didukung.md`). Gunakan Docker/self-host untuk saat ini.
 
 ## Dokumen desain lengkap
 

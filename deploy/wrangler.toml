@@ -1,3 +1,4 @@
+# BELUM FUNGSIONAL — lihat docs/adr/000X-workers-belum-didukung.md (TBD)
 # Config Cloudflare Workers — target deploy serverless utama (§5, §11 Fase 1)
 # Deploy: `wrangler deploy` dari root repo, atau tombol "Deploy to Cloudflare"
 

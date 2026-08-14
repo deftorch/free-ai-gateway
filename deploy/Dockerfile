@@ -9,7 +9,9 @@ COPY packages/server/package.json packages/server/package.json
 COPY packages/mcp-server/package.json packages/mcp-server/package.json
 COPY packages/cli/package.json packages/cli/package.json
 COPY adapters/gemini/package.json adapters/gemini/package.json
+COPY adapters/nvidia-nim/package.json adapters/nvidia-nim/package.json
 COPY adapters/_contract-tests/package.json adapters/_contract-tests/package.json
+COPY packages/web/package.json packages/web/package.json
 RUN bun install --frozen-lockfile
 
 FROM deps AS build
