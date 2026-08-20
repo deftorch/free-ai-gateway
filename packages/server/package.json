@@ -15,7 +15,7 @@
     "@free-ai-gateway/adapter-nvidia-nim": "workspace:*",
     "@free-ai-gateway/core": "workspace:*",
     "drizzle-orm": "^0.45.2",
-    "hono": "^4.6.0",
+    "hono": "^4.13.2",
     "zod": "^3.23.0"
   },
   "devDependencies": {
