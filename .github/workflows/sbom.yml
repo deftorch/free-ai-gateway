@@ -17,6 +17,6 @@ jobs:
           output-file: sbom.cyclonedx.json
 
       - name: Upload SBOM ke rilis
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           files: sbom.cyclonedx.json
